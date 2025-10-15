@@ -1,0 +1,103 @@
+	TOTAL DE VENTE PAR ANNEE 
+SELECT year(Date), sum(Vente) as "tota de vente par année"
+FROM sakila.sales3
+group by year(Date);
+-- QUANTITE D'ARTICLES VENDU PAR ANNEE
+Select year(Date), sum(Quantite)
+from sales3
+group by year(Date);
+-- Quantite Total d'articles 
+Select sum(Quantite)
+from sales3; 
+
+-- L'ARTICLE LE PLUS VENDU EN VOLUME
+ Select Article, sum(Quantite)
+ from sales3
+ group by Article
+ order by sum(Quantite)  desc
+ limit 1; 
+
+-- L'ARTICLE QUI GENERE OU RAPPORTE PLUS LE CHIFFRE D'AFFAIRE
+Select Article, sum(Vente) as "article le plus vendu"
+from sales3
+group by Article
+order by sum(Vente) desc
+limit 1;
+-- QUELLE EST LA PART(POURCENTAGE) DE CHAQUE ARTICLE DANS LA VENTE TOTAL 
+SELECT 
+    Article,
+    sum(Vente)  AS "total article",
+    (SUM(Vente) * 100.0/ SUM(SUM(Vente)) OVER()) AS "part pourcentage"
+FROM sales3
+GROUP BY Article;
+
+-- LA TENDANCE DES VENTES PAR MOIS OU TRIMESTRE
+Select 
+Article as "Article", 
+year(Date) as "Annee",
+month(Date) as "Mois",
+sum(Vente) as "Total de Vente"
+From sales3
+group by year(Date), month(Date), Article
+order by annee, Mois ; 
+
+-- LE JOUR DE LA SEMAINE QUI RAPPORTE OU GENRE  PLUS DE VENTE 
+SELECT 
+    DAYNAME(Date) AS "jour semaine", 
+    SUM(Vente) AS "total ventes"
+FROM sales3
+GROUP BY DAYNAME(Date)
+ORDER BY SUM(Vente)  DESC
+LIMIT 1;  -- Le jour avec le plus de ventes
+
+-- LA PERIODE DE L'ANNEE LA PLUS RENTABLE
+SELECT 
+year(Date) as "Periode de l'annee",
+sum(Vente) as "total de vente"
+from sales3
+group by year(Date)
+order by sum(Vente) desc
+limit 1;  -- comme l'année la plus rentabLE
+-- QUI SONT LES MEILLEURS CLIENT(TOP 5) CEUX QUI ACHETENT PLUS
+SELECT 
+Nom as "Nom du client", 
+Prenom as " Prenom du Client",
+sum(Vente) as "total de vente"
+from sales3
+group by Nom, Prenom
+order by sum(Vente) desc
+limit 5; 
+
+-- COMBIEN DE FOIS LES CLIENT ONT  ACHETE  AU TOTAL 
+SELECT
+Nom as "Nom du client",
+count(*) as "nombre du client" , 
+sum(Vente) as "total de vente"
+from sales3
+group by Nom
+order by sum(Vente)
+desc
+ 
+-- COMPTER LES CLIENT UNIQUES AYANT ACHETE  
+SELECT COUNT(DISTINCT Nom) AS "nb_clients_uniques"
+FROM sales3;
+
+--  COMBIEN DE FOIS LES CLIENT A ACHETE 
+SELECT 
+    Nom as "Nom du Client",
+    COUNT(*) AS "Nombre d'Achat"
+FROM sales3
+GROUP BY Nom
+ORDER BY COUNT(*) DESC ;
+
+-- QUELLE EST LA VALEUR MOYENNE DES ACHAT PAR CLIENTS 
+SELECT 
+Nom as "Client",
+avg(Vente) as "Moyenne d'Achat"
+from sales3
+group by Nom
+order by avg(Vente) desc ;  
+
+
+
+
